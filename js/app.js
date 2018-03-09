@@ -1,5 +1,6 @@
-function drawProducts(data) {
-  let products = data.products;
+const products = data.products;
+
+drawProducts = (data) => {
   let productsContainer = document.getElementById("products-container");
   products.forEach((product, index) => {
     let productHTML = createProductHTML(product);
@@ -7,7 +8,7 @@ function drawProducts(data) {
   });
 }
 
-function createProductHTML(product) {
+createProductHTML = (product) => {
   let template = `
     <h3>${product.title}</h3>
     <img src='${product.imageUrl}' alt='${product.description}'/>
@@ -27,60 +28,63 @@ function createProductHTML(product) {
 
 drawProducts(data);
 
-function addToCart(id) {  
-  const buttonChange = event.target; 
-  // increaseCounter(); 
-  changeButtonStatus(buttonChange);
+const productsUser = []; 
 
-  /* cuando agrego a carrito, tengo que:
-  1) Incrementar en uno mi contador del menu-------------
-  2) Guardar mi producto en algun lugar--localstorage C:
-  3) Cambiar el boton de agregar a carrito----------------
-  por quitar del carrito----------
-  */
+addToCart = (id) => {     
+  let productsUserCount = products.filter(element => element.id == id);   
+  productsUser.push(productsUserCount[0]);    
+  localStorage.setItem('productsUser', JSON.stringify(productsUser));
+  changeButtonStatus(event.target); 
+  // removeFromCart(id, productsUser)
+  console.log(productsUser);
+  
+  // 1) Incrementar en uno mi contador del menu O
+  // 2) Guardar mi producto en algun lugar--localstorage X
+  // 3) Cambiar el boton de agregar a carrito por quitar del carrito O
 }
 
-function removeFromCart() {
-  //contador
-  // decreaseCounter();
-  /* cuando agrego a carrito, tengo que:
-  1) Decrementar en uno mi contador del menu
-  2) Borrar mi producto de algun lugar
-  3) Cambiar el boton de quitar del carrito
-  por agregar a carrito
-  */
+removeFromCart = (id) => { 
+  // localStorage.removeItem('productsUser');
+  // // const idProduct = parseInt(id); 
+  // let productsUserCount = productsUser.filter(element => element.id != id);   
+  // productsUser.push(productsUserCount[0]);  
+  // localStorage.setItem('productsUser', JSON.stringify(productsUser));
+  // console.log(productsUser); 
+
+  // 1) Decrementar en uno mi contador del menu O
+  // 2) Borrar mi producto de algun lugar X --localstorage
+  // 3) Cambiar el boton de quitar del carrito por agregar a carrito O
 }
 
-function increaseCounter(buttonCounter) {    
+increaseCounter = (buttonCounter) => {
   let counter = parseInt(buttonCounter.innerText);
   counter += 1;
-  buttonCounter.innerText = counter;  
-  /* como accedemos al HTML del contador
-  y como lo incrementamos*/
+  buttonCounter.innerText = counter;
+  //  como accedemos al HTML del contador y como lo incrementamos O
 }
 
-function decreaseCounter(buttonCounter) {
+decreaseCounter = (buttonCounter) => {
   let counter = parseInt(buttonCounter.innerText);
   counter -= 1;
   buttonCounter.innerText = counter;
-  /* como accedemos al HTML del contador
-  y como lo incrementamos*/
+  // como accedemos al HTML del contador y como lo incrementamos O
 }
 
-function changeButtonStatus(buttonChange) {
+changeButtonStatus = (eventtarget) => {
   const buttonCounter = document.getElementById('counterItems');
-  // let button =  buttonChange.innerText;
-  if (buttonChange.innerText == 'Agregar a carrito'){
-    increaseCounter(buttonCounter);
-    buttonChange.innerText = 'Quitar al carrito';
-  }else{
-    buttonChange.innerText = 'Agregar a carrito'
+  
+  if (eventtarget.innerText == 'Agregar a carrito') {
+    increaseCounter(buttonCounter);    
+    eventtarget.innerText = 'Quitar al carrito';
+  } else {
+    eventtarget.innerText = 'Agregar a carrito';    
+    removeFromCart(eventtarget.dataset.productId);    
     decreaseCounter(buttonCounter);
-  }  
-  /* esta funcion deberia recibir un boton y
-  cambiar su estatus
-    Si el boton esta en agregar al carrito
-      cambia el texto a quitar del carrito
-    Y viceversa
+  }
+  /* esta funcion deberia recibir un boton y cambiar su estatus O
+    Si el boton esta en agregar al carrito cambia el texto a quitar del carrito O
+    Y viceversa O
   */
 }
+
+// document.getElementById('button-checkout').addEventListener('click', calculateTotal);
